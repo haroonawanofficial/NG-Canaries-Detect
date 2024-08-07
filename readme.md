@@ -13,7 +13,7 @@
 - NG-CanaryHunter provides security professionals with a powerful and discreet tool for identifying security traps and tripwires in a network.
 - Its advanced techniques and stealth capabilities ensure thorough and undetected security assessments, enhancing the overall security posture.
 
-# Algorithms to Deafeat Canaries
+# Algorithms to Deafeat Canaries such as Thinkst Canary and T-Pot
 - Dynamic Payload Generation: Use more complex, dynamically changing payloads that are less likely to be fingerprinted by defensive systems.
 - Random Timing Delays: Introduce random timing delays between packet sends to mimic human behavior and evade rate-based detection systems.
 - Packet Fragmentation: Use packet fragmentation to sneak past simple packet inspection systems that do not properly reassemble packets.
