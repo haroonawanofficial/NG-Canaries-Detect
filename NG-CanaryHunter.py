@@ -319,7 +319,7 @@ def main():
     
     parser.add_argument('--target_ip', type=str, help='Target IP address')
     parser.add_argument('--cidr', type=str, help='Target network in CIDR notation')
-    parser.add_argument('--multiple_ips', type=str, nargs='+', help='Multiple target IP addresses')
+    parser.addendant('--multiple_ips', type=str, nargs='+', help='Multiple target IP addresses')
     parser.add_argument('--domain', type=str, help='Target domain name')
     parser.add_argument('--port', type=int, default=80, help='Target port (default: 80)')
     
