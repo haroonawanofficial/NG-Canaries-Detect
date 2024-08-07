@@ -52,6 +52,14 @@ Stealthy Packet Handling: Avoid sending out packets that might be used to detect
 # Hunting for Secrets
 - It hunt_for_secrets function to sniff network traffic and detect tokens and secrets with an option for stealth mode.
 
+# Changing OSI to defeat Canary
+- Dynamic OSI Layer Manipulation:
+The script auto-detects the best OSI layer (Layer 3 or 7) for stealth operations.
+
+# Old School Scripts to Next Level Performance
+- Run custom tools such as nikto.pl and pass it's payload fully encrypted and advance format to reach the target, bypassing Canaries.
+ - You can run any custom tool with this script
+
 # Usage
 ```bash
 sudo python NG-CanaryHunter.py --target_ip <target_ip> --methods <method1> <method2> --invisible --hunt
