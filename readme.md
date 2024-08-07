@@ -28,14 +28,14 @@
 # More Information on Invisible Mode
 - Invisible mode encrypts the payloads using a unique key, making them difficult for canary devices to analyze. By encrypting the traffic, the scan appears as harmless or regular encrypted communication, reducing the likelihood of detection. This stealth technique ensures that the payloads are only interpretable by the intended operating system, not by the security traps.
 
-# Finding Tokens and Confirming Tripwires:
+# Finding Tokens and Confirming Tripwires for T-Pot and Thinkst Canary:
 - The script sends special messages (payloads) to the target computer to see how it reacts.
 - It uses methods to send these messages and look for specific responses that indicate a token or tripwire.
 - It looks for patterns in the responses that match common token formats using regex (a tool for finding patterns in text).
 - Any detected tokens or unusual responses are saved in a database to keep a record.
 - The hunt_for_secrets function sends specific requests to find hidden secrets or tokens on the target.
 
-# Sending Spoofed Requests to Appear Outside the Network:
+# Sending Spoofed Requests to Appear Outside the Network for T-Pot and Thinkst Canary:
 - The script can send messages that look like they come from a different computer.
 - It creates a packet with a fake source IP address and sends it to the target.
 - This makes the message appear as if it is coming from outside the network, which can trick the target into thinking it is being attacked from a different location.
