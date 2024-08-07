@@ -7,12 +7,10 @@
 - Flexible Targeting: Supports single IPs, CIDR notation, multiple IPs, and domain resolution.
 - Harmless Simulation: Includes a harmless mode to simulate benign user behavior.
 - Hunting Capabilities: Option to hunt for secrets and tripwires after detection.
-
-# Scanning Techniques as Pre-Step
+# Scanning Detection of Canary as Preliminary Step
 - NG-CanaryHunter uses very unsual method to scan and generate legitimate network traffic.
-
-# Detection of Canary as Pre-Step
-- NG-CanaryHunter provides security professionals with a powerful and discreet tool for identifying security traps and tripwires in a network. Its advanced techniques and stealth capabilities ensure thorough and undetected security assessments, enhancing the overall security posture.
+- NG-CanaryHunter provides security professionals with a powerful and discreet tool for identifying security traps and tripwires in a network.
+- Its advanced techniques and stealth capabilities ensure thorough and undetected security assessments, enhancing the overall security posture.
 
 # Algorithms to Deafeat Canaries
 - Dynamic Payload Generation: Use more complex, dynamically changing payloads that are less likely to be fingerprinted by defensive systems.
