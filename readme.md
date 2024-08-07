@@ -1,5 +1,5 @@
 # NG-CanaryHunter 
-- It is an advanced assessment network scanning tool designed for security professionals to detect and interact with canary devices, such as Thinkst Canary and T-Pot (I am not defaming them or their enemy; this was done purely for research purposes) while minimizing the risk of detection.
+- It is an advanced assessment network scanning tool designed for security professionals to detect and interact with canary devices, such as Thinkst Canary and T-Pot while minimizing the risk of detection.
 
 # Features of NG-CanaryHunter 
 - Advanced Scanning Techniques: Utilizes sophisticated methods like IPv6 extension header scans, custom payload TCP scans, fingerprinting, timing analysis, and protocol anomaly detection.
