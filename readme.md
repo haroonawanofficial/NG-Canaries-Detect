@@ -77,41 +77,43 @@ python script.py --target_ip 192.168.1.10 --methods obfuscation --invisible --hu
 
 # Output
 ```bash
-$ python ng-canaryhunter.py --target_ip 192.168.1.10 --methods ipv6 custom_payload fingerprinting timing protocol non_standard_ports --hunt --invisible --interface eth0 --crawl --tripwire --stealth
+$ python ng-canaryhunter.py --target_ip 192.168.1.11 --methods ipv6 custom_payload fingerprinting timing protocol non_standard_ports --hunt --invisible --interface eth0 --crawl --tripwire --stealth --customtool /home/haroon/Downloads/nikto.pl --spoofip 192.168.1.1 --auto_osi
 
-Scanning 192.168.1.10
+
 Starting canary detection phase...
-IPv6 Extension Header Scan on 192.168.1.10
-Sent IPv6 Extension Header Scan to 192.168.1.10
-Sent Custom Payload TCP Scan to 192.168.1.10:80
-Possible canary device detected at 192.168.1.10 (Fingerprint: TTL=64, Window=65535)
-High latency detected (1.3 seconds), 192.168.1.10 may be a canary device
-Protocol anomaly detected in 192.168.1.10's response
-Response from 192.168.1.10 on non-standard port 8443, potential canary device
-Sent spoofed packet from 192.168.0.100 to 192.168.1.10:80
+IPv6 Extension Header Scan on 192.168.1.11
+Sent IPv6 Extension Header Scan to 192.168.1.11
+Sent Custom Payload TCP Scan to 192.168.1.11:80
+Possible canary device detected at 192.168.1.11 (Fingerprint: TTL=50, Window=8192)
+High latency detected (1.5 seconds), 192.168.1.11 may be a canary device
+Protocol anomaly detected in 192.168.1.11's response
+Response from 192.168.1.11 on non-standard port 9999, potential canary device
+Detected token: http://canarytokens.org/unique-token
+Detected secret: secret_key=abc123
 
-Starting hunting phase in promiscuous mode...
-Detected token: https://canarytokens.org/xyz123
-Detected secret: supersecret
+Using dynamic OSI layer manipulation and encrypted payloads to enhance custom tool performance...
 
-Starting crawl and detection...
-Detected token in http://192.168.1.10:80/js/canarytoken.js
-Detected token in http://192.168.1.10:80/css/style.css
+Starting custom tool scan using /home/haroon/Downloads/nikto.pl on 192.168.1.11:80 with spoofed IP 192.168.1.1
+Auto-detected best OSI layer: Layer 7 (Application Layer)
+- Nikto v2.1.6
+---------------------------------------------------------------------------
++ Target IP:          192.168.1.11
++ Target Hostname:    haroontesterserver
++ Target Port:        80
++ Start Time:         2024-08-07 16:00:00
+---------------------------------------------------------------------------
++ Server: Apache/2.4.41 (Ubuntu)
++ The X-XSS-Protection header is not defined. This header can hint to the user-agent to protect against some forms of XSS.
++ Uncommon header 'x-backend-server' found, with contents: haroontesterserver
++ Allowed HTTP Methods: GET, HEAD, POST, OPTIONS 
++ OSVDB-3092: /admin: This might be interesting...
++ OSVDB-3092: /phpmyadmin: This might be interesting...
++ OSVDB-3268: /phpMyAdmin/scripts/setup.php: phpMyAdmin setup script found.
++ 100 requests: 0 error(s) and 4 item(s) reported on remote host
++ End Time:           2024-08-07 16:02:00 (120 seconds)
+---------------------------------------------------------------------------
+Scan completed with enhanced stealth techniques: Layer 7 manipulation, encrypted payloads, and randomized options.
 
-Timestamp               Target IP        Scan Type                Result                        Details
-2023-11-20 12:00:00     192.168.1.10     IPv6 Extension Header     Scan Completed               Sent IPv6 Extension Header Scan to 192.168.1.10
-2023-11-20 12:00:01     192.168.1.10     Custom Payload TCP        Scan Completed               Sent Custom Payload TCP Scan to 192.168.1.10:80
-2023-11-20 12:00:02     192.168.1.10     Fingerprinting            Possible Canary Device       Fingerprint: TTL=64, Window=65535
-2023-11-20 12:00:03     192.168.1.10     Timing Analysis           High Latency Detected        Latency: 1.3 seconds
-2023-11-20 12:00:04     192.168.1.10     Protocol Anomaly          Anomaly Detected             Response options did not match expected values
-2023-11-20 12:00:05     192.168.1.10     Non-Standard Port Scan    Potential Canary Device      Response on port 8443
-2023-11-20 12:00:06     192.168.1.10     Spoofed Packet            Spoofed Packet Sent          From 192.168.0.100 to 192.168.1.10:80
-2023-11-20 12:00:10     192.168.1.10     Canary Detection          Token Detected               https://canarytokens.org/xyz123
-2023-11-20 12:00:12     192.168.1.10     Secret Detection          Secret Detected              supersecret
-2023-11-20 12:00:15     192.168.1.10     Crawl Detection           Token Detected               http://192.168.1.10:80/js/canarytoken.js
-2023-11-20 12:00:17     192.168.1.10     Crawl Detection           Token Detected               http://192.168.1.10:80/css/style.css
-
-Generated HTML report at scan_report.html
 ```
 
 # Company
