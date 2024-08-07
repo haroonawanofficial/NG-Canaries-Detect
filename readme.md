@@ -1,5 +1,5 @@
 # NG-CanaryHunter 
-- It is an advanced assessment network scanning tool designed for security professionals to detect and interact with canary devices, such as Canary while minimizing the risk of detection.
+- It is an advanced assessment network scanning tool designed for security professionals to detect and interact with canary devices, such as Thinkst Canary and T-Pot (I am not defaming them or their enemy; this was done purely for research purposes) while minimizing the risk of detection.
 
 # Features of NG-CanaryHunter 
 - Advanced Scanning Techniques: Utilizes sophisticated methods like IPv6 extension header scans, custom payload TCP scans, fingerprinting, timing analysis, and protocol anomaly detection.
@@ -7,6 +7,7 @@
 - Flexible Targeting: Supports single IPs, CIDR notation, multiple IPs, and domain resolution.
 - Harmless Simulation: Includes a harmless mode to simulate benign user behavior.
 - Hunting Capabilities: Option to hunt for secrets and tripwires after detection.
+
 # Scanning Detection of Canary as Preliminary Step
 - NG-CanaryHunter uses very unsual method to scan and generate legitimate network traffic.
 - NG-CanaryHunter provides security professionals with a powerful and discreet tool for identifying security traps and tripwires in a network.
@@ -26,6 +27,18 @@
 
 # More Information on Invisible Mode
 - Invisible mode encrypts the payloads using a unique key, making them difficult for canary devices to analyze. By encrypting the traffic, the scan appears as harmless or regular encrypted communication, reducing the likelihood of detection. This stealth technique ensures that the payloads are only interpretable by the intended operating system, not by the security traps.
+
+# Finding Tokens and Confirming Tripwires:
+- The script sends special messages (payloads) to the target computer to see how it reacts.
+- It uses methods to send these messages and look for specific responses that indicate a token or tripwire.
+- It looks for patterns in the responses that match common token formats using regex (a tool for finding patterns in text).
+- Any detected tokens or unusual responses are saved in a database to keep a record.
+- The hunt_for_secrets function sends specific requests to find hidden secrets or tokens on the target.
+
+# Sending Spoofed Requests to Appear Outside the Network:
+- The script can send messages that look like they come from a different computer.
+- It creates a packet with a fake source IP address and sends it to the target.
+- This makes the message appear as if it is coming from outside the network, which can trick the target into thinking it is being attacked from a different location.
 
 # Usage
 ```bash
