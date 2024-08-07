@@ -1,6 +1,8 @@
 import argparse
+import subprocess
 from scapy.all import *
 from scapy.layers.inet6 import IPv6, IPv6ExtHdrHopByHop
+from scapy.layers.dns import DNS, DNSQR
 import sqlite3
 import random
 import time
@@ -8,7 +10,6 @@ import re
 from datetime import datetime
 from cryptography.fernet import Fernet
 from ipaddress import ip_network
-import subprocess
 import socket
 import requests
 from bs4 import BeautifulSoup
@@ -282,6 +283,37 @@ def generate_html_report():
     with open("scan_report.html", "w") as f:
         f.write(html)
 
+def custom_tool_scan(target_ip, target_port, tool_path):
+    print(f"Starting custom tool scan using {tool_path} on {target_ip}:{target_port}")
+    
+    # Construct the command to run the custom tool
+    command = f"perl {tool_path} -h {target_ip} -p {target_port}"
+    
+    # Execute the custom tool and capture the output
+    process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    stdout, stderr = process.communicate()
+    
+    if process.returncode == 0:
+        print(f"Custom tool scan completed successfully:\n{stdout.decode()}")
+        record_scan(target_ip, 'Custom Tool Scan', 'Completed', stdout.decode())
+    else:
+        print(f"Custom tool scan failed:\n{stderr.decode()}")
+        record_scan(target_ip, 'Custom Tool Scan', 'Failed', stderr.decode())
+
+def auto_detect_and_change_osi(target_ip):
+    # Function to attempt various OSI layer manipulations
+    print(f"Auto-detecting and changing OSI layers for target {target_ip}...")
+    # Example: DNS-based detection (Layer 7)
+    pkt = IP(dst=target_ip) / UDP(dport=53) / DNS(rd=1, qd=DNSQR(qname="example.com"))
+    response = sr1(pkt, timeout=2, verbose=0)
+    if response:
+        if response.haslayer(DNS) and response.getlayer(DNS).ancount > 0:
+            print("Target responds to DNS queries. Using Layer 7 manipulation.")
+            return "Layer 7"
+    # Default to Layer 3 manipulation if no response
+    print("Defaulting to Layer 3 manipulation.")
+    return "Layer 3"
+
 def main():
     parser = argparse.ArgumentParser(description='Advanced Network Scanner for Stealth Operations')
     
@@ -302,6 +334,8 @@ def main():
     parser.add_argument('--crawl', action='store_true', help='Crawl .js and .css files for canary tokens')
     parser.add_argument('--tripwire', action='store_true', help='Combine all tripwire detection methods')
     parser.add_argument('--stealth', action='store_true', help='Use stealth mode for promiscuous sniffing')
+    parser.add_argument('--customtool', type=str, help='Path to a custom tool (e.g., nikto.pl)')
+    parser.add_argument('--auto_osi', action='store_true', help='Auto-detect and change OSI layers for stealth')
 
     args = parser.parse_args()
 
@@ -349,7 +383,21 @@ def main():
                 honeypot_result = detect_honeypot(target)
                 polymorphic_result = polymorphic_scan(target, args.port, args.invisible)
                 record_scan(target, 'Full Scan', 'Completed', f'Honeypot: {honeypot_result}, Polymorphic: {polymorphic_result}, Invisible: {args.invisible}')
+        
+        if args.customtool:
+            custom_tool_scan(target, args.port, args.customtool)
 
+        if args.auto_osi:
+            osi_layer = auto_detect_and_change_osi(target)
+            if osi_layer == "Layer 7":
+                # Perform DNS-based detection
+                pkt = IP(dst=target) / UDP(dport=53) / DNS(rd=1, qd=DNSQR(qname="example.com"))
+                send(pkt, verbose=0)
+            elif osi_layer == "Layer 3":
+                # Default to IP-based detection
+                pkt = IP(dst=target) / TCP(dport=80, flags="S")
+                send(pkt, verbose=0)
+        
     display_results()
     generate_html_report()
 
