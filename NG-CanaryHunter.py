@@ -8,7 +8,10 @@ import re
 from datetime import datetime
 from cryptography.fernet import Fernet
 from ipaddress import ip_network
+import subprocess
 import socket
+import requests
+from bs4 import BeautifulSoup
 
 # Database setup
 conn = sqlite3.connect('scan_results.db')
@@ -39,6 +42,12 @@ canary_patterns = [
     r'\b[0-9a-f]{40}\b',  # Generic SHA-1 like pattern, often used in canary tokens
     r'https?://canarytokens\.org/[\w]+',  # Pattern to match URLs from canarytokens.org
 ]
+
+def enable_promiscuous_mode(interface):
+    subprocess.run(['ifconfig', interface, 'promisc'])
+
+def disable_promiscuous_mode(interface):
+    subprocess.run(['ifconfig', interface, '-promisc'])
 
 def ipv6_extension_header_scan(target_ip):
     print(f"IPv6 Extension Header Scan on {target_ip}")
@@ -133,16 +142,50 @@ def detect_canaries(target_ip, methods, invisible, spoof_ip=None):
     if "non_standard_ports" in methods or "all" in methods:
         non_standard_port_scan(target_ip)
 
-def hunt_for_secrets(target_ip, target_port):
-    print("Starting hunting phase...")
-    payload = "GET /secrets HTTP/1.1\r\nHost: {}\r\n\r\n".format(target_ip)
-    pkt = IP(dst=target_ip) / TCP(dport=target_port, flags="PA") / Raw(load=payload)
-    response = sr1(pkt, timeout=2, verbose=0)
-    if response:
-        detected_sessions.append(response.getlayer(Raw).load.decode('utf-8'))
-        print(f"Response from {target_ip}:{target_port}: {response.show(dump=True)}")
+def crawl_and_detect(target_ip, target_port):
+    url = f"http://{target_ip}:{target_port}"
+    try:
+        response = requests.get(url, timeout=5)
+        soup = BeautifulSoup(response.text, 'html.parser')
+        js_files = [script['src'] for script in soup.find_all('script') if 'src' in script.attrs]
+        css_files = [link['href'] for link in soup.find_all('link', rel='stylesheet') if 'href' in link.attrs]
+
+        for file in js_files + css_files:
+            if not file.startswith('http'):
+                file = f"http://{target_ip}:{target_port}/{file}"
+            try:
+                file_response = requests.get(file, timeout=5)
+                for pattern in canary_patterns:
+                    if re.search(pattern, file_response.text):
+                        detected_tokens.append(file)
+                        print(f"Detected token in {file}")
+                        record_scan(target_ip, 'Canary Detection', 'Token Detected', file)
+            except requests.RequestException as e:
+                print(f"Failed to fetch {file}: {e}")
+    except requests.RequestException as e:
+        print(f"Failed to crawl {url}: {e}")
+
+def hunt_for_secrets(interface, stealth=False):
+    print("Starting hunting phase in promiscuous mode...")
+    enable_promiscuous_mode(interface)
+    
+    def packet_callback(packet):
+        if packet.haslayer(Raw):
+            load = packet[Raw].load.decode('utf-8', errors='ignore')
+            for pattern in canary_patterns:
+                if re.search(pattern, load):
+                    detected_tokens.append(load)
+                    print(f"Detected token: {load}")
+            if "secret" in load.lower():
+                detected_secrets.append(load)
+                print(f"Detected secret: {load}")
+    
+    if stealth:
+        sniff(iface=interface, prn=packet_callback, store=0, timeout=60, filter="tcp and (port 80 or port 443)", count=100)
     else:
-        print(f"No response from {target_ip}:{target_port} during hunting")
+        sniff(iface=interface, prn=packet_callback, store=0, timeout=60)
+    
+    disable_promiscuous_mode(interface)
 
 def generate_dynamic_payload(size=1024):
     return ''.join(random.choices("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", k=size))
@@ -255,6 +298,10 @@ def main():
     parser.add_argument('--invisible', action='store_true', help='Use invisible mode with encrypted payloads')
     parser.add_argument('--spoofip', type=str, help='Spoof source IP address')
     parser.add_argument('--scan_type', type=str, choices=['polymorphic', 'detect_honeypot', 'full_scan'], help='Type of scan')
+    parser.add_argument('--interface', type=str, default='eth0', help='Network interface to use for promiscuous mode')
+    parser.add_argument('--crawl', action='store_true', help='Crawl .js and .css files for canary tokens')
+    parser.add_argument('--tripwire', action='store_true', help='Combine all tripwire detection methods')
+    parser.add_argument('--stealth', action='store_true', help='Use stealth mode for promiscuous sniffing')
 
     args = parser.parse_args()
 
@@ -279,9 +326,17 @@ def main():
     
     for target in targets:
         print(f"Scanning {target}")
-        detect_canaries(target, args.methods, args.invisible)
+        if args.tripwire:
+            detect_canaries(target, ['ipv6', 'custom_payload', 'fingerprinting', 'timing', 'protocol', 'non_standard_ports', 'stealth'], args.invisible, args.spoofip)
+        else:
+            detect_canaries(target, args.methods, args.invisible, args.spoofip)
+        
         if args.hunt:
-            hunt_for_secrets(target, args.port)
+            hunt_for_secrets(args.interface, args.stealth)
+        
+        if args.crawl:
+            crawl_and_detect(target, args.port)
+        
         if args.scan_type:
             if args.scan_type == 'detect_honeypot':
                 result = detect_honeypot(target)
@@ -296,6 +351,7 @@ def main():
                 record_scan(target, 'Full Scan', 'Completed', f'Honeypot: {honeypot_result}, Polymorphic: {polymorphic_result}, Invisible: {args.invisible}')
 
     display_results()
+    generate_html_report()
 
 if __name__ == "__main__":
     main()
