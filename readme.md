@@ -117,10 +117,68 @@ Scan completed with enhanced stealth techniques: Layer 7 manipulation, encrypted
 ```
 
 # Bonus - Network File Share Scanner for Canary
-- Use networkshare.py to identify which machine is the canary and how much share access, such as tokens or tripwires, is implemented.
+- Use network_scanner_canary.py to identify which machine is the canary and how much share access, such as tokens or tripwires, is implemented.
 - Identify the tripwires.
 - Use a public-facing IP with spoofing.
 - Enjoy your legitimate presence in the network.
+
+# Sample Usage
+Normal Scan Without Spoofing or Normal User Simulation
+sudo python network_scanner_canary.py -s 192.168.1.0/24 -m normal
+
+# Sotealth Scan with Spoofing Enabled
+sudo python network_scanner_canary.py -s 192.168.1.0/24 -m stealth --spoof
+
+# St ealth Scan with Normal User Simulation
+sudopython network_scanner_canary.py -s 192.168.1.0/24 -m stealth --normal-user
+
+# Stealth Scan with Both Spoofing and Normal User Simulation
+sudo python network_scanner_canary.py -s 192.168.1.0/24 -m stealth --spoof --normal-user
+
+``` bash
+Sample Output: Normal Scan Without Spoofing or Normal User Simulation
+Scanning subnet: 192.168.1.0/24 in normal mode with spoofing disabled
+Simulated normal user activity: read 123 bytes from \\192.168.1.5\finance\safe_file.txt
+Simulated normal user activity: read 123 bytes from \\192.168.1.6\tripwire\safe_file.txt
+Simulated normal user activity: read 123 bytes from \\192.168.1.7\engineering\safe_file.txt
+...
+Canary token detected in \\192.168.1.5\finance\token.txt
+Canary token detected in \\192.168.1.6\tripwire\alert.log
+...
+
+Stealth Scan with Spoofing Enabled
+Scanning subnet: 192.168.1.0/24 in stealth mode with spoofing enabled
+Spoofing IP: 192.168.1.100 to access 192.168.1.5
+Spoofing IP: 192.168.1.101 to access 192.168.1.6
+Spoofing IP: 192.168.1.102 to access 192.168.1.7
+...
+Canary token detected in \\192.168.1.5\finance\token.txt
+Canary token detected in \\192.168.1.6\tripwire\alert.log
+...
+
+Stealth Scan with Normal User Simulation
+Scanning subnet: 192.168.1.0/24 in stealth mode with spoofing disabled
+Simulated normal user activity: read 123 bytes from \\192.168.1.5\finance\safe_file.txt
+Simulated normal user activity: read 123 bytes from \\192.168.1.6\tripwire\safe_file.txt
+Simulated normal user activity: read 123 bytes from \\192.168.1.7\engineering\safe_file.txt
+...
+Canary token detected in \\192.168.1.5\finance\token.txt
+Canary token detected in \\192.168.1.6\tripwire\alert.log
+...
+
+Stealth Scan with Both Spoofing and Normal User Simulation
+Scanning subnet: 192.168.1.0/24 in stealth mode with spoofing enabled
+Spoofing IP: 192.168.1.100 to access 192.168.1.5
+Simulated normal user activity: read 123 bytes from \\192.168.1.5\finance\safe_file.txt
+Spoofing IP: 192.168.1.101 to access 192.168.1.6
+Simulated normal user activity: read 123 bytes from \\192.168.1.6\tripwire\safe_file.txt
+Spoofing IP: 192.168.1.102 to access 192.168.1.7
+Simulated normal user activity: read 123 bytes from \\192.168.1.7\engineering\safe_file.txt
+...
+Canary token detected in \\192.168.1.5\finance\token.txt
+Canary token detected in \\192.168.1.6\tripwire\alert.log
+...
+```
 
 # Company
 Cyber Zeus
