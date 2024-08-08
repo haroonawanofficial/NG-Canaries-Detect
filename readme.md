@@ -122,25 +122,33 @@ Scan completed with enhanced stealth techniques: Layer 7 manipulation, encrypted
 - Use a public-facing IP with spoofing.
 - Enjoy your legitimate presence in the network.
 
+# Thinkst Canary and T-Pot
+- Included SMB Callpacket Packets to detect tripwires
+- Include MD5 and SHA1 remote detection method to detect tripwires
+
 # Sample Usage
 Normal Scan Without Spoofing or Normal User Simulation
 sudo python network_scanner_canary.py -s 192.168.1.0/24 -m normal
 
-# Sotealth Scan with Spoofing Enabled
+# Stealth Scan with Spoofing Enabled
 sudo python network_scanner_canary.py -s 192.168.1.0/24 -m stealth --spoof
 
-# St ealth Scan with Normal User Simulation
+# Stealth Scan with Normal User Simulation
 sudopython network_scanner_canary.py -s 192.168.1.0/24 -m stealth --normal-user
 
 # Stealth Scan with Both Spoofing and Normal User Simulation
 sudo python network_scanner_canary.py -s 192.168.1.0/24 -m stealth --spoof --normal-user
 
+# Stealth Scan with Spoofing from a Custom IP Address
+sudo python network_scanner_canary.py -s 192.168.1.0/24 -m stealth --spoof --spoof-ip 203.0.113.5
+
+
 ``` bash
 Sample Output: Normal Scan Without Spoofing or Normal User Simulation
 Scanning subnet: 192.168.1.0/24 in normal mode with spoofing disabled
-Simulated normal user activity: read 123 bytes from \\192.168.1.5\finance\safe_file.txt
-Simulated normal user activity: read 123 bytes from \\192.168.1.6\tripwire\safe_file.txt
-Simulated normal user activity: read 123 bytes from \\192.168.1.7\engineering\safe_file.txt
+Simulated normal user activity from \\192.168.1.5\finance\safe_file.txt
+Simulated normal user activity from \\192.168.1.6\tripwire\safe_file.txt
+Simulated normal user activity from \\192.168.1.7\engineering\safe_file.txt
 ...
 Canary token detected in \\192.168.1.5\finance\token.txt
 Canary token detected in \\192.168.1.6\tripwire\alert.log
@@ -158,9 +166,9 @@ Canary token detected in \\192.168.1.6\tripwire\alert.log
 
 Stealth Scan with Normal User Simulation
 Scanning subnet: 192.168.1.0/24 in stealth mode with spoofing disabled
-Simulated normal user activity: read 123 bytes from \\192.168.1.5\finance\safe_file.txt
-Simulated normal user activity: read 123 bytes from \\192.168.1.6\tripwire\safe_file.txt
-Simulated normal user activity: read 123 bytes from \\192.168.1.7\engineering\safe_file.txt
+Simulated normal user activity from \\192.168.1.5\finance\safe_file.txt
+Simulated normal user activity from \\192.168.1.6\tripwire\safe_file.txt
+Simulated normal user activity from \\192.168.1.7\engineering\safe_file.txt
 ...
 Canary token detected in \\192.168.1.5\finance\token.txt
 Canary token detected in \\192.168.1.6\tripwire\alert.log
@@ -169,16 +177,29 @@ Canary token detected in \\192.168.1.6\tripwire\alert.log
 Stealth Scan with Both Spoofing and Normal User Simulation
 Scanning subnet: 192.168.1.0/24 in stealth mode with spoofing enabled
 Spoofing IP: 192.168.1.100 to access 192.168.1.5
-Simulated normal user activity: read 123 bytes from \\192.168.1.5\finance\safe_file.txt
+Simulated normal user activity from \\192.168.1.5\finance\safe_file.txt
 Spoofing IP: 192.168.1.101 to access 192.168.1.6
-Simulated normal user activity: read 123 bytes from \\192.168.1.6\tripwire\safe_file.txt
+Simulated normal user activity from \\192.168.1.6\tripwire\safe_file.txt
 Spoofing IP: 192.168.1.102 to access 192.168.1.7
-Simulated normal user activity: read 123 bytes from \\192.168.1.7\engineering\safe_file.txt
+Simulated normal user activity from \\192.168.1.7\engineering\safe_file.txt
+...
+Canary token detected in \\192.168.1.5\finance\token.txt
+Canary token detected in \\192.168.1.6\tripwire\alert.log
+...
+
+Scanning subnet: 192.168.1.0/24 in stealth mode with spoofing enabled
+Spoofing IP: 203.0.113.5 to access 192.168.1.5
+Simulated normal user activity: accessed \\192.168.1.5\finance\quarterly_report.xlsx
+Spoofing IP: 203.0.113.5 to access 192.168.1.6
+Simulated normal user activity: accessed \\192.168.1.6\tripwire\system_logs.log
+Spoofing IP: 203.0.113.5 to access 192.168.1.7
+Simulated normal user activity: accessed \\192.168.1.7\engineering\design_specifications.docx
 ...
 Canary token detected in \\192.168.1.5\finance\token.txt
 Canary token detected in \\192.168.1.6\tripwire\alert.log
 ...
 ```
+
 
 # Company
 Cyber Zeus
