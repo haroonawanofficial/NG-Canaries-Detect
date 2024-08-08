@@ -1,6 +1,6 @@
 # CanaryHunter Package
-- CanaryHunter to detect canaries and scan the network stealthly and detect traffic, callbacks, and tripwires including in ports
-- Network File Share Scanner to detect tripwires in network shares
+- CanaryHunter to detect canaries, scan the network stealthily, and identify traffic, callbacks, and tripwires, including in ports.
+- Network File Share Scanner to detect tripwires in network shares.
 
 # NG-CanaryHunter 
 - It is an advanced assessment network scanning tool designed for security professionals to detect and interact with canary devices, such as Thinkst Canary and T-Pot while minimizing the risk of detection.
