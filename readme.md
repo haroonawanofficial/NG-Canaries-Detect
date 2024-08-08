@@ -116,6 +116,12 @@ Scan completed with enhanced stealth techniques: Layer 7 manipulation, encrypted
 
 ```
 
+# Bonus - Network File Share Scanner for Canary
+- Use networkshare.py to identify which machine is canary and how much share access which will be tokens or tripwires are implemented
+- Identify the tripwires
+- Use Public Facing IP using spoof
+- Enjoy your legitimate presence in the network
+
 # Company
 Cyber Zeus
 
